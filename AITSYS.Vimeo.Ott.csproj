@@ -4,6 +4,29 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Vimeo OTT Client</Title>
+    <Authors>AITSYS,Lulalaby,Aiko-IT-Systems</Authors>
+    <Description>A client library for Vimeo's OTT API</Description>
+    <Copyright>Copyright 2025 Aiko IT Systems</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT</RepositoryUrl>
+    <PackageId>AITSYS.Vimeo.OTT</PackageId>
+    <Product>$(PackageId)</Product>
+    <PackageTags>vimeo,ott,api client,vimeo ott,vhx</PackageTags>
+    <PackageLicenseExpression> Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +39,13 @@
 
   <ItemGroup>
     <Folder Include="Enums\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
