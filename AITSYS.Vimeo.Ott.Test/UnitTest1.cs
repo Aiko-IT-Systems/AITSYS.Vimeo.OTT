@@ -5,11 +5,10 @@ using AITSYS.Vimeo.Ott.Clients;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace AITSYS.Vimeo.OTT.Test;
 
-public class Tests
+public sealed class Tests
 {
 	public VimeoOttClient ApiClient { get; set; }
 
@@ -35,22 +34,23 @@ public class Tests
 	}
 
 	[Test]
-	public async Task Test1()
+	public void ThrowOnLockedEndpoint()
+	{
+		var exception = Assert.CatchAsync(this.CustomerApiClient.ApiClient.GetCustomersAsync);
+		Console.WriteLine(exception.Message);
+	}
+
+	[Test]
+	public async Task TestCustomerBoundApiClient()
 	{
 		var customer = await this.CustomerApiClient.ApiClient.GetCustomerAsync(this.UserId);
 		var sku = customer.Embedded.Products.FirstOrDefault()?.Sku;
 		Console.WriteLine(sku ?? "No sku");
+	}
 
-		try
-		{
-			_ = await this.CustomerApiClient.ApiClient.GetCustomersAsync();
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine(ex.Message);
-			Console.WriteLine(ex.StackTrace);
-		}
-
+	[Test]
+	public async Task TestPaginator()
+	{
 		var paginator = await this.ApiClient.ApiClient.GetCustomersAsync();
 		foreach (var embeddedCustomer in paginator.Embedded.Customers)
 		{
