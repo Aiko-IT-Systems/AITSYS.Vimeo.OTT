@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
+
+using System.Net;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,12 +8,15 @@ using Microsoft.VisualBasic;
 
 namespace AITSYS.Vimeo.OTT.Entities;
 
+/// <summary>
+///     Represents the vimeo ott client configuration.
+/// </summary>
 public class VimeoOttConfiguration
 {
 	/// <summary>
 	///     Sets the token used to identify the client (protected).
 	/// </summary>
-	private string? apiKey;
+	private string? _apiKey;
 
 	/// <summary>
 	///     Creates a new configuration with default values.
@@ -44,13 +49,13 @@ public class VimeoOttConfiguration
 	/// </summary>
 	public required string? ApiKey
 	{
-		internal get => this.apiKey;
+		internal get => this._apiKey;
 		set
 		{
 			if (string.IsNullOrWhiteSpace(value))
 				throw new ArgumentNullException(nameof(value), "Api key cannot be null, empty, or all whitespace.");
 
-			this.apiKey = value.Trim();
+			this._apiKey = value.Trim();
 		}
 	}
 
