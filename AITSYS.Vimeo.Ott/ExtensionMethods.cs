@@ -1,6 +1,9 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using AITSYS.Vimeo.Ott.Clients;
+using AITSYS.Vimeo.Ott.Logging;
+
+using Microsoft.Extensions.Logging;
 
 namespace AITSYS.Vimeo.Ott;
 
@@ -23,9 +26,7 @@ public static class ExtensionMethods
 		var shadowConfig = baseClient.Configuration;
 		shadowConfig.VhxCustomer = customerHref;
 		shadowConfig.VhxClientIp = clientIp;
-		return new(shadowConfig)
-		{
-			CustomerBound = true
-		};
+		baseClient.Logger.LogDebug(LoggerEvents.Library, "Creating a new client bound to {customer}", customerHref);
+		return new(shadowConfig);
 	}
 }

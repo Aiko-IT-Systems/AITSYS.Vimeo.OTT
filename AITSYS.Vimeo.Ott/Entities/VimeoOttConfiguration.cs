@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
+// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using System.Net;
 
@@ -16,7 +16,7 @@ public class VimeoOttConfiguration
 	/// <summary>
 	///     Sets the token used to identify the client (protected).
 	/// </summary>
-	private string? _apiKey;
+	private readonly string? _apiKey;
 
 	/// <summary>
 	///     Creates a new configuration with default values.
@@ -37,12 +37,12 @@ public class VimeoOttConfiguration
 	/// <summary>
 	///     Sets the customer href.
 	/// </summary>
-	public string? VhxCustomer { internal get; set; }
+	internal string? VhxCustomer { get; set; }
 
 	/// <summary>
 	///     Sets the customer client ip.
 	/// </summary>
-	public string? VhxClientIp { internal get; set; }
+	internal string? VhxClientIp { get; set; }
 
 	/// <summary>
 	///     Sets the token used to identify the client.
@@ -92,7 +92,7 @@ public class VimeoOttConfiguration
 	///     <para>To create your own logger, implement the <see cref="Microsoft.Extensions.Logging.ILoggerFactory" /> instance.</para>
 	///     <para>Defaults to built-in implementation.</para>
 	/// </summary>
-	public ILoggerFactory LoggerFactory { internal get; set; } = null!;
+	public ILoggerFactory? LoggerFactory { internal get; set; }
 
 	/// <summary>
 	///     <para>Sets the service provider.</para>

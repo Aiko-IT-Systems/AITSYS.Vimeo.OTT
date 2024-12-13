@@ -3,6 +3,9 @@
 using AITSYS.Vimeo.Ott.Entities.Customers;
 using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
+using AITSYS.Vimeo.Ott.Logging;
+
+using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
@@ -16,8 +19,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 
 	internal void CanNotAccessEndpointWithCustomerAuthedClient()
 	{
-		if (this.Client.CustomerBound)
-			throw new InvalidOperationException("A customer authenticated client can not access the current endpoint");
+		if (!this.Client.CustomerBound)
+			return;
+
+		this.Client.Logger.LogCritical(LoggerEvents.RestError, "Tried to access a restricted endpoint with a customer bound client");
+		throw new InvalidOperationException("A customer authenticated client can not access the current endpoint");
 	}
 
 	internal async Task<OttPagination<OttCustomersEmbeddedData>> GetCustomersAsync()
