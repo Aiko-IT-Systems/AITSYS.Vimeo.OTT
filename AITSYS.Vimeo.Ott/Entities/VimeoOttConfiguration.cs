@@ -11,7 +11,7 @@ namespace AITSYS.Vimeo.OTT.Entities;
 /// <summary>
 ///     Represents the vimeo ott client configuration.
 /// </summary>
-public class VimeoOttConfiguration
+public sealed class VimeoOttConfiguration
 {
 	/// <summary>
 	///     Sets the token used to identify the client (protected).
@@ -63,7 +63,8 @@ public class VimeoOttConfiguration
 	///     <para>Sets the minimum logging level for messages.</para>
 	///     <para>Defaults to <see cref="Information" />.</para>
 	/// </summary>
-	public LogLevel MinimumLogLevel { internal get; set; } = LogLevel.Information;
+	// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+	public LogLevel MinimumLogLevel { internal get; init; } = LogLevel.Information;
 
 	/// <summary>
 	///     <para>Allows you to overwrite the time format used by the internal debug logger.</para>
@@ -72,13 +73,13 @@ public class VimeoOttConfiguration
 	///         format.
 	///     </para>
 	/// </summary>
-	public string LogTimestampFormat { internal get; set; } = "yyyy-MM-dd HH:mm:ss zzz";
+	public string LogTimestampFormat { internal get; init; } = "yyyy-MM-dd HH:mm:ss zzz";
 
 	/// <summary>
 	///     <para>Sets the proxy to use for HTTP connections to VHX.</para>
 	///     <para>Defaults to <see langword="null" />.</para>
 	/// </summary>
-	public IWebProxy? Proxy { internal get; set; } = null;
+	public IWebProxy? Proxy { internal get; init; } = null;
 
 	/// <summary>
 	///     <para>Sets the timeout for HTTP requests.</para>
@@ -99,5 +100,6 @@ public class VimeoOttConfiguration
 	///     <para>This allows passing data around without resorting to static members.</para>
 	///     <para>Defaults to an empty service provider.</para>
 	/// </summary>
+	// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
 	public IServiceProvider ServiceProvider { internal get; init; } = new ServiceCollection().BuildServiceProvider(true);
 }
