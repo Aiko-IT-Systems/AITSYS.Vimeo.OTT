@@ -7,3 +7,5 @@ config.json
 AITSYS.Vimeo.Ott.sln.DotSettings.user
 .idea/
 /Entities/Products/productref.json
+/AITSYS.Vimeo.Ott.Test/UnitTest1.cs
+AITSYS.Vimeo.Ott/Entities/Products/productref.json

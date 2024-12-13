@@ -1,5 +1,6 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
+using AITSYS.Vimeo.Ott.Entities.Customers;
 using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
 
@@ -24,5 +25,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		this.CanNotAccessEndpointWithCustomerAuthedClient();
 		var result = await this.RestClient.GetStringAsync("/customers");
 		return JsonConvert.DeserializeObject<OttPagination<OttCustomersEmbeddedData>>(result)!;
+	}
+
+	internal async Task<OttCustomer<OttCustomerProductEmbeddedData>> GetCustomerAsync(int customerId)
+	{
+		var result = await this.RestClient.GetStringAsync($"/customers/{customerId}");
+		return JsonConvert.DeserializeObject<OttCustomer<OttCustomerProductEmbeddedData>>(result)!;
 	}
 }

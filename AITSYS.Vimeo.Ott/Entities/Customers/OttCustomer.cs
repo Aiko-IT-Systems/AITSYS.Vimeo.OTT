@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
+// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using AITSYS.Vimeo.Ott.Entities.Base;
 using AITSYS.Vimeo.Ott.Entities.Links;
@@ -29,7 +29,7 @@ public sealed class OttCustomer<TOttEmbedded> : OttIdObject<OttCustomerLinks, TO
 	/// <summary>
 	///     The customer thumbnail.
 	/// </summary>
-	[JsonProperty("email")]
+	[JsonProperty("thumbnail")]
 	public Uri? Thumbnail { get; internal set; }
 
 	/// <summary>

@@ -1,5 +1,7 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
+using System.Text;
+
 using AITSYS.Vimeo.OTT.Entities;
 
 namespace AITSYS.Vimeo.Ott.Clients;
@@ -22,7 +24,8 @@ public sealed class VimeoOttClient
 		if (this.Configuration.VhxClientIp is not null)
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("VHX-Client-IP", this.Configuration.VhxCustomer);
 
-		this.RestClient.DefaultRequestHeaders.Authorization = new("Basic", $"{this.Configuration.ApiKey}:");
+		var byteArray = Encoding.ASCII.GetBytes($"{this.Configuration.ApiKey}:");
+		this.RestClient.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(byteArray));
 
 		this.ApiClient = new(this);
 	}
