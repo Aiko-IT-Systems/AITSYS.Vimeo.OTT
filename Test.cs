@@ -26,18 +26,18 @@ public class TestClass
 
 	public void TestFunction2()
 	{
-		var customer = GetPaginator<OttCustomerProductEmbeddedData>();
+		var customer = GetPaginator<OttCustomerProductEmbeddedData>("{}");
 		var moviesUrl = customer.Embedded.Products.FirstOrDefault()?.Links.Movies.Href;
 		Console.WriteLine(moviesUrl?.AbsoluteUri ?? "No movies url");
 
-		var paginator = GetPaginator<OttCustomersEmbeddedData>();
+		var paginator = GetPaginator<OttCustomersEmbeddedData>("{}");
 		foreach (var embeddedCustomer in paginator.Embedded.Customers)
 		{
 			Console.WriteLine(embeddedCustomer.Name);
 			Console.WriteLine(embeddedCustomer.Embedded.LatestEvent.Topic);
 		}
 
-		var eventPaginator = GetPaginator<OttEventsEmbeddedData>();
+		var eventPaginator = GetPaginator<OttEventsEmbeddedData>("{}");
 		Console.WriteLine("Next page: {0}", eventPaginator.Links.Next?.Href?.AbsoluteUri ?? "none");
 		foreach (var embeddedEvent in eventPaginator.Embedded.Events)
 		{
