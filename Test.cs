@@ -1,4 +1,5 @@
 using AITSYS.Vimeo.Ott;
+using AITSYS.Vimeo.Ott.Clients;
 using AITSYS.Vimeo.Ott.Entities.Customers;
 using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
@@ -13,7 +14,7 @@ namespace TestNamespace;
 
 public class TestClass
 {
-	public void TestFunction1()
+	public async void TestFunction1()
 	{
 		var apiClient = new VimeoOttClient(new()
 		{
@@ -21,7 +22,11 @@ public class TestClass
 			MinimumLogLevel = LogLevel.Debug
 		});
 
+		var customers = await apiClient.ApiClient.GetCustomersAsync();
+
 		var customerBoundApiClient = apiClient.GetClientForCustomer("https://api.vhx.tv/customers/1");
+
+		var failCustomers = await customerBoundApiClient.ApiClient.GetCustomersAsync();
 	}
 
 	public void TestFunction2()

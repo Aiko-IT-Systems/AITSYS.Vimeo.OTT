@@ -50,7 +50,7 @@ public class VimeoOttConfiguration
 	public required string? ApiKey
 	{
 		internal get => this._apiKey;
-		set
+		init
 		{
 			if (string.IsNullOrWhiteSpace(value))
 				throw new ArgumentNullException(nameof(value), "Api key cannot be null, empty, or all whitespace.");

@@ -21,6 +21,9 @@ public static class ExtensionMethods
 		var shadowConfig = baseClient.Configuration;
 		shadowConfig.VhxCustomer = customerHref;
 		shadowConfig.VhxClientIp = clientIp;
-		return new(shadowConfig);
+		return new(shadowConfig)
+		{
+			CustomerBound = true
+		};
 	}
 }
