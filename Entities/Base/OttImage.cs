@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace AITSYS.Vimeo.Ott.Entities.Products;
+namespace AITSYS.Vimeo.Ott.Entities.Base;
 
 public sealed class OttImage
 {

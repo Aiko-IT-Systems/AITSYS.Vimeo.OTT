@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace AITSYS.Vimeo.Ott.Entities;
+namespace AITSYS.Vimeo.Ott.Entities.Links;
 
 /// <summary>
 ///     Represents a OTT HAL link.

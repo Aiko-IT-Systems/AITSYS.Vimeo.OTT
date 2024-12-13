@@ -4,13 +4,14 @@ using AITSYS.Vimeo.Ott.Interfaces;
 
 using Newtonsoft.Json;
 
-namespace AITSYS.Vimeo.Ott.Entities;
+namespace AITSYS.Vimeo.Ott.Entities.Base;
 
 /// <summary>
 ///     Represents an api object within ott with a unique id.
 /// </summary>
 /// <typeparam name="TOttHalLinks">The type of the HAL links.</typeparam>
-public class OttIdObject<TOttHalLinks> : OttObject<TOttHalLinks> where TOttHalLinks : IHalLinks
+/// <typeparam name="TOttEmbedded">The type of the embedded object.</typeparam>
+public class OttIdObject<TOttHalLinks, TOttEmbedded> : OttObject<TOttHalLinks, TOttEmbedded> where TOttHalLinks : IHalLinks where TOttEmbedded : IOttEmbedded
 {
 	/// <summary>
 	///     Gets the objects id.

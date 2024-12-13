@@ -1,6 +1,8 @@
 ﻿// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
+using AITSYS.Vimeo.Ott.Entities.Base;
 using AITSYS.Vimeo.Ott.Entities.Links;
+using AITSYS.Vimeo.Ott.Interfaces;
 
 using Newtonsoft.Json;
 
@@ -9,7 +11,8 @@ namespace AITSYS.Vimeo.Ott.Entities.Products;
 /// <summary>
 ///     Represents a product.
 /// </summary>
-public sealed class OttProduct : OttIdObject<OttProductLinks>
+/// <typeparam name="TOttEmbedded">The type of the embedded object.</typeparam>
+public sealed class OttProduct<TOttEmbedded> : OttIdObject<OttProductLinks, TOttEmbedded> where TOttEmbedded : IOttEmbedded
 {
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
@@ -41,6 +44,9 @@ public sealed class OttProduct : OttIdObject<OttProductLinks>
 	[JsonProperty("customer_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int CustomerCount { get; internal set; }
 
+	[JsonProperty("videos_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? VideosCount { get; internal set; }
+
 	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
 	public int? Position { get; internal set; }
 
@@ -49,8 +55,6 @@ public sealed class OttProduct : OttIdObject<OttProductLinks>
 
 	[JsonProperty("tier", NullValueHandling = NullValueHandling.Ignore)]
 	public OttTier? Tier { get; internal set; }
-
-	// TODO: add _embedded
 
 	[JsonProperty("additional_images", NullValueHandling = NullValueHandling.Ignore)]
 	public OttAdditionalImages? AdditionalImages { get; internal set; }
@@ -76,7 +80,8 @@ public sealed class OttProduct : OttIdObject<OttProductLinks>
 	[JsonProperty("free_trial", NullValueHandling = NullValueHandling.Ignore)]
 	public OttFreeTrail? FreeTrial { get; internal set; }
 
-	// TODO: add geoblock
+	[JsonProperty("geoblock", NullValueHandling = NullValueHandling.Ignore)]
+	public OttGeoblock? Geoblock { get; internal set; }
 
 	[JsonProperty("has_content", NullValueHandling = NullValueHandling.Ignore)]
 	public bool HasContent { get; internal set; }
@@ -102,8 +107,9 @@ public sealed class OttProduct : OttIdObject<OttProductLinks>
 	[JsonProperty("trailer_video_id", NullValueHandling = NullValueHandling.Ignore)]
 	public int? TrailerVideoId { get; internal set; }
 
+	// Access period is in seconds
 	[JsonProperty("rental_access_period", NullValueHandling = NullValueHandling.Ignore)]
-	public object? RentalAccessPeriod { get; internal set; }
+	public int? RentalAccessPeriod { get; internal set; }
 
 	[JsonProperty("sections_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int SectionsCount { get; internal set; }
@@ -122,4 +128,6 @@ public sealed class OttProduct : OttIdObject<OttProductLinks>
 
 	[JsonProperty("annual_only", NullValueHandling = NullValueHandling.Ignore)]
 	public bool AnnualOnly { get; internal set; }
+	
+	// TODO: add preorder {enabled: bool}
 }

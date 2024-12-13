@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace AITSYS.Vimeo.Ott.Entities.Customers;
+namespace AITSYS.Vimeo.Ott.Entities.Base;
 
 /// <summary>
 ///     Represents a customers location.
