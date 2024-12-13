@@ -35,6 +35,7 @@ public sealed class OttProduct<TOttEmbedded> : OttIdObject<OttProductLinks, TOtt
 	[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
 	public DateTime UpdatedAt { get; internal set; }
 
+	// Can be purchase, free, rental or pwyw
 	[JsonProperty("types", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<string> Types { get; internal set; } = [];
 
@@ -114,6 +115,7 @@ public sealed class OttProduct<TOttEmbedded> : OttIdObject<OttProductLinks, TOtt
 	[JsonProperty("sections_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int SectionsCount { get; internal set; }
 
+	// Could be sale or donation?
 	[JsonProperty("sale_type", NullValueHandling = NullValueHandling.Ignore)]
 	public string? SaleType { get; internal set; }
 
@@ -128,6 +130,6 @@ public sealed class OttProduct<TOttEmbedded> : OttIdObject<OttProductLinks, TOtt
 
 	[JsonProperty("annual_only", NullValueHandling = NullValueHandling.Ignore)]
 	public bool AnnualOnly { get; internal set; }
-	
-	// TODO: add preorder {enabled: bool}
+
+	// TODO: add preorder {enabled: bool, release_date: optional date}
 }

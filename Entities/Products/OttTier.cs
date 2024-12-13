@@ -7,8 +7,8 @@ namespace AITSYS.Vimeo.Ott.Entities.Products;
 public sealed class OttTier
 {
 	[JsonProperty("level", NullValueHandling = NullValueHandling.Ignore)]
-	public int Level { get; internal set; }
+	public int? Level { get; internal set; }
 
 	[JsonProperty("free", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Free { get; internal set; }
+	public bool? Free { get; internal set; }
 }

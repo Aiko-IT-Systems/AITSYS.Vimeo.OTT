@@ -28,4 +28,10 @@ public sealed class OttPrice
 	/// </summary>
 	[JsonProperty("rental", NullValueHandling = NullValueHandling.Ignore)]
 	public OttPriceConfiguration? Rental { get; internal set; }
+
+	/// <summary>
+	///     Gets the pay-what-you-want price configuration.
+	/// </summary>
+	[JsonProperty("pwyw", NullValueHandling = NullValueHandling.Ignore)]
+	public OttPriceConfiguration? Pwyw { get; internal set; }
 }

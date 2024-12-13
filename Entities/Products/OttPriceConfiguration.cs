@@ -26,4 +26,10 @@ public sealed class OttPriceConfiguration
 	/// </summary>
 	[JsonProperty("formatted", NullValueHandling = NullValueHandling.Ignore)]
 	public string Formatted { get; internal set; }
+
+	/// <summary>
+	///     Gets the max cents, only applicable for the pwyw config.
+	/// </summary>
+	[JsonProperty("max", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Max { get; internal set; }
 }
