@@ -37,12 +37,12 @@ public class VimeoOttConfiguration
 	/// <summary>
 	///     Sets the customer href.
 	/// </summary>
-	public string? CustomerHref { internal get; set; }
+	public string? VhxCustomer { internal get; set; }
 
 	/// <summary>
-	///     Sets the customer ip.
+	///     Sets the customer client ip.
 	/// </summary>
-	public string? CustomerIp { internal get; set; }
+	public string? VhxClientIp { internal get; set; }
 
 	/// <summary>
 	///     Sets the token used to identify the client.
