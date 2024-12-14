@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 
-namespace AITSYS.Vimeo.OTT.Entities;
+namespace AITSYS.Vimeo.Ott.Entities;
 
 /// <summary>
 ///     Represents the vimeo ott client configuration.
@@ -102,4 +102,18 @@ public sealed class VimeoOttConfiguration
 	/// </summary>
 	// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
 	public IServiceProvider ServiceProvider { internal get; init; } = new ServiceCollection().BuildServiceProvider(true);
+
+	/// <summary>
+	///     <para>
+	///         Sets whether to rely on Vimeo for NTP (Network Time Protocol) synchronization with the
+	///         "X-Ratelimit-Reset-After" header.
+	///     </para>
+	///     <para>
+	///         If the system clock is unsynced, setting this to true will ensure ratelimits are synced with Vimeo and
+	///         reduce the risk of hitting one.
+	///     </para>
+	///     <para>This should only be set to false if the system clock is synced with NTP.</para>
+	///     <para>Defaults to <see langword="true" />.</para>
+	/// </summary>
+	public bool UseRelativeRatelimit { internal get; set; } = true;
 }

@@ -4,7 +4,7 @@ using AITSYS.Vimeo.Ott.Clients;
 
 using Microsoft.Extensions.Logging;
 
-namespace AITSYS.Vimeo.OTT.Logging;
+namespace AITSYS.Vimeo.Ott.Logging;
 
 /// <summary>
 ///     Represents a composite default logger.
