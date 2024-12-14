@@ -1,7 +1,6 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
@@ -20,7 +19,6 @@ namespace AITSYS.Vimeo.Ott.Rest;
 /// <summary>
 ///     Represents a client used to make REST requests.
 /// </summary>
-[SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
 internal sealed class RestClient : IDisposable
 {
 	/// <summary>
@@ -59,11 +57,6 @@ internal sealed class RestClient : IDisposable
 	private readonly bool _useResetAfter;
 
 	/// <summary>
-	///     Gets the vimeo ott client.
-	/// </summary>
-	private readonly VimeoOttClient _vimeoOtt;
-
-	/// <summary>
 	///     Gets the bucket cleaner token source.
 	/// </summary>
 	private CancellationTokenSource? _bucketCleanerTokenSource;
@@ -89,9 +82,9 @@ internal sealed class RestClient : IDisposable
 	/// <param name="client">The client.</param>
 	internal RestClient(VimeoOttClient client)
 	{
-		this._vimeoOtt = client;
+		var vimeoOtt = client;
 
-		this.Debug = this._vimeoOtt.Configuration.MinimumLogLevel is LogLevel.Trace;
+		this.Debug = vimeoOtt.Configuration.MinimumLogLevel is LogLevel.Trace;
 
 		this._logger = client.Logger;
 
@@ -155,8 +148,9 @@ internal sealed class RestClient : IDisposable
 		{
 			this._cleanerTask?.Dispose();
 			this._bucketCleanerTokenSource?.Dispose();
-			this.HttpClient?.Dispose();
+			this.HttpClient.Dispose();
 		}
+		// ReSharper disable once EmptyGeneralCatchClause
 		catch
 		{ }
 
@@ -195,6 +189,7 @@ internal sealed class RestClient : IDisposable
 		foreach (var xp in rparamsProps)
 		{
 			var val = xp.GetValue(routeParams);
+#pragma warning disable CS8601, CS8602
 			rparams[xp.Name] = val switch
 			{
 				string xs => xs,
@@ -203,6 +198,7 @@ internal sealed class RestClient : IDisposable
 				IFormattable xf => xf.ToString(null, CultureInfo.InvariantCulture),
 				_ => val.ToString()
 			};
+#pragma warning restore CS8601, CS8602
 		}
 
 		customerHref ??= "unlimited";
@@ -318,7 +314,7 @@ internal sealed class RestClient : IDisposable
 			var req = BuildFormRequest(request);
 
 			if (this.Debug && req.Content is not null)
-				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
 
 			var response = new RestResponse();
 			try
@@ -333,6 +329,7 @@ internal sealed class RestClient : IDisposable
 				if (this.Debug)
 					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
 
+				// ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = res.StatusCode;
@@ -536,6 +533,7 @@ internal sealed class RestClient : IDisposable
 				if (this.Debug)
 					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
 
+				// ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = res.StatusCode;
@@ -852,7 +850,7 @@ internal sealed class RestClient : IDisposable
 		}
 
 		var clientTime = DateTimeOffset.UtcNow;
-		var resetTime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
+		var resetTime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset!, CultureInfo.InvariantCulture));
 		var serverTime = clientTime;
 		if (hs.TryGetValue("Date", out var rawDate))
 			serverTime = DateTimeOffset.Parse(rawDate, CultureInfo.InvariantCulture).ToUniversalTime();
@@ -923,7 +921,7 @@ internal sealed class RestClient : IDisposable
 		{
 			bucket.Hash = newHash;
 
-			var oldBucketId = RateLimitBucket.GenerateBucketId(oldHash!, bucket.CustomerHref);
+			var oldBucketId = RateLimitBucket.GenerateBucketId(oldHash, bucket.CustomerHref);
 
 			_ = this._hashesToBuckets.TryRemove(oldBucketId, out _);
 			_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (_, _) => bucket);
@@ -943,6 +941,7 @@ internal sealed class RestClient : IDisposable
 			{
 				await Task.Delay(this._bucketCleanupDelay, this._bucketCleanerTokenSource.Token).ConfigureAwait(false);
 			}
+			// ReSharper disable once EmptyGeneralCatchClause
 			catch
 			{ }
 
@@ -977,7 +976,7 @@ internal sealed class RestClient : IDisposable
 			}
 
 			if (removedBuckets > 0)
-				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder?.ToString().TrimEnd(',', ' '));
 
 			if (this._hashesToBuckets.IsEmpty)
 				break;

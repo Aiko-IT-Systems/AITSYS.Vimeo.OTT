@@ -9,7 +9,7 @@ namespace AITSYS.Vimeo.Ott.Logging;
 /// <summary>
 ///     Represents a default logger provider.
 /// </summary>
-internal class DefaultLoggerProvider : ILoggerProvider
+internal sealed class DefaultLoggerProvider : ILoggerProvider
 {
 	/// <summary>
 	///     Gets the minimum log level.

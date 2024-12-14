@@ -10,12 +10,6 @@ namespace AITSYS.Vimeo.Ott.Rest;
 public sealed class RestResponse
 {
 	/// <summary>
-	///     Initializes a new instance of the <see cref="RestResponse" /> class.
-	/// </summary>
-	internal RestResponse()
-	{ }
-
-	/// <summary>
 	///     Gets the response code sent by the remote party.
 	/// </summary>
 	public HttpStatusCode ResponseCode { get; internal set; }

@@ -9,23 +9,16 @@ namespace AITSYS.Vimeo.Ott.Logging;
 /// <summary>
 ///     Represents a composite default logger.
 /// </summary>
-internal class CompositeDefaultLogger : ILogger<VimeoOttClient>
+/// <remarks>
+///     Initializes a new instance of the <see cref="CompositeDefaultLogger" /> class.
+/// </remarks>
+/// <param name="providers">The providers.</param>
+internal sealed class CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers) : ILogger<VimeoOttClient>
 {
 	/// <summary>
 	///     Gets the loggers.
 	/// </summary>
-	private readonly List<ILogger<VimeoOttClient>> _loggers;
-
-	/// <summary>
-	///     Initializes a new instance of the <see cref="CompositeDefaultLogger" /> class.
-	/// </summary>
-	/// <param name="providers">The providers.</param>
-	public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
-	{
-		this._loggers = providers.Select(x => x.CreateLogger(typeof(VimeoOttClient).FullName!))
-			.OfType<ILogger<VimeoOttClient>>()
-			.ToList();
-	}
+	private readonly List<ILogger<VimeoOttClient>> _loggers = [.. providers.Select(x => x.CreateLogger(typeof(VimeoOttClient).FullName!)).OfType<ILogger<VimeoOttClient>>()];
 
 	/// <summary>
 	///     Whether the logger is enabled.

@@ -37,7 +37,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		return req.WaitForCompletionAsync();
 	}
 
-	/// <summary>
+	/*/// <summary>
 	///     Executes a rest form data request.
 	/// </summary>
 	/// <param name="bucket">The bucket.</param>
@@ -54,7 +54,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		this.RestClient.ExecuteFormRequestAsync(req).LogTaskFault(this.Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
 
 		return req.WaitForCompletionAsync();
-	}
+	}*/
 
 	internal void CanNotAccessEndpointWithCustomerAuthedClient()
 	{

@@ -156,7 +156,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// </summary>
 	/// <param name="e"><see cref="RateLimitBucket" /> to compare to.</param>
 	/// <returns>Whether the <see cref="RateLimitBucket" /> is equal to this <see cref="RateLimitBucket" />.</returns>
-	public bool Equals(RateLimitBucket e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
+	public bool Equals(RateLimitBucket? e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
 
 	/// <summary>
 	///     Generates an ID for this request bucket.
@@ -201,7 +201,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="RateLimitBucket" />.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 		=> this.Equals(obj as RateLimitBucket);
 
 	/// <summary>

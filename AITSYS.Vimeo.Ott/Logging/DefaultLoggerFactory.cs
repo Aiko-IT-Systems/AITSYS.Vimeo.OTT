@@ -9,7 +9,7 @@ namespace AITSYS.Vimeo.Ott.Logging;
 /// <summary>
 ///     Represents a default logger factory.
 /// </summary>
-internal class DefaultLoggerFactory : ILoggerFactory
+internal sealed class DefaultLoggerFactory : ILoggerFactory
 {
 	/// <summary>
 	///     Gets the providers.
