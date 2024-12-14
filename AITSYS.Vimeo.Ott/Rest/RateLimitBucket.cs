@@ -73,6 +73,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	{
 		this.Hash = hash;
 		this.CustomerHref = customerHref;
+		this.HashInternal = null!;
 
 		this.BucketId = GenerateBucketId(hash, customerHref);
 		this.RouteHashes = [];
@@ -164,7 +165,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// <param name="hash">Hash for this bucket.</param>
 	/// <param name="customerHref">Customer href for this bucket.</param>
 	/// <returns>Bucket Id.</returns>
-	public static string GenerateBucketId(string hash, string customerHref)
+	public static string GenerateBucketId(string hash, string customerHref) // , string customerId, string videoId, string siteId, string productId, string collectionId, string commentId)
 		=> $"{hash}:{customerHref}";
 
 	/// <summary>

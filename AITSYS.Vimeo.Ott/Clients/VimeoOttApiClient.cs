@@ -37,25 +37,6 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		return req.WaitForCompletionAsync();
 	}
 
-	/*/// <summary>
-	///     Executes a rest form data request.
-	/// </summary>
-	/// <param name="bucket">The bucket.</param>
-	/// <param name="url">The url.</param>
-	/// <param name="method">The method.</param>
-	/// <param name="route">The route.</param>
-	/// <param name="headers">The headers.</param>
-	/// <param name="formData">The form data.</param>
-	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	private Task<RestResponse> DoFormRequestAsync(RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, Dictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
-	{
-		var req = new RestFormRequest(this.Client, bucket, url, method, route, formData, headers, ratelimitWaitOverride);
-
-		this.RestClient.ExecuteFormRequestAsync(req).LogTaskFault(this.Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
-
-		return req.WaitForCompletionAsync();
-	}*/
-
 	internal void CanNotAccessEndpointWithCustomerAuthedClient()
 	{
 		if (!this.Client.CustomerBound)
