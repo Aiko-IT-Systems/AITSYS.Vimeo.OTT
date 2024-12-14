@@ -26,8 +26,11 @@ public sealed class PaymentRequiredException : Exception
 		{
 			var j = JObject.Parse(response.Response);
 
-			if (j["message"] != null)
+			if (j["message"] is not null)
 				this.JsonMessage = j["message"]!.ToString();
+
+			if (j["documentation_url"] is not null)
+				this.DocumentationUrl = j["documentation_url"]!.ToString();
 		}
 		catch (Exception)
 		{ }
@@ -47,4 +50,9 @@ public sealed class PaymentRequiredException : Exception
 	///     Gets the JSON received.
 	/// </summary>
 	public string? JsonMessage { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets the documentation url.
+	/// </summary>
+	public string? DocumentationUrl { get; internal set; } = null;
 }

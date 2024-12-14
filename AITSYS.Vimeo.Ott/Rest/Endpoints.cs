@@ -13,4 +13,6 @@ public static class Endpoints
 	public const string BASE_URI = "https://api.vhx.tv";
 
 	public const string CUSTOMERS = "/customers";
+	public const string EVENTS = "/events";
+	public const string PRODUCTS = "/products";
 }

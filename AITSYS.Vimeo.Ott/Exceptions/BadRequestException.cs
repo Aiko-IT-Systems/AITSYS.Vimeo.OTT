@@ -26,14 +26,11 @@ public sealed class BadRequestException : Exception
 		{
 			var j = JObject.Parse(response.Response);
 
-			if (j["code"] is not null)
-				this.Code = (int)j["code"]!;
-
 			if (j["message"] is not null)
 				this.JsonMessage = j["message"]!.ToString();
 
-			if (j["errors"] is not null)
-				this.Errors = j["errors"]!.ToString();
+			if (j["documentation_url"] is not null)
+				this.DocumentationUrl = j["documentation_url"]!.ToString();
 		}
 		catch
 		{ }
@@ -50,17 +47,12 @@ public sealed class BadRequestException : Exception
 	public RestResponse WebResponse { get; internal set; }
 
 	/// <summary>
-	///     Gets the error code for this exception.
-	/// </summary>
-	public int? Code { get; internal set; } = null;
-
-	/// <summary>
 	///     Gets the JSON message received.
 	/// </summary>
 	public string? JsonMessage { get; internal set; } = null;
 
 	/// <summary>
-	///     Gets the form error responses in JSON format.
+	///     Gets the documentation url.
 	/// </summary>
-	public string? Errors { get; internal set; } = null;
+	public string? DocumentationUrl { get; internal set; } = null;
 }

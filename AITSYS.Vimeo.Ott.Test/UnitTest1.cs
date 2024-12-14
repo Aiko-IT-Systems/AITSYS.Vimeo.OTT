@@ -39,7 +39,7 @@ public sealed class Tests
 	[Test]
 	public void TestIntentionalExceptionThrow()
 	{
-		_ = Assert.CatchAsync(this.CustomerVimeoClient.ApiClient.GetCustomersAsync);
+		_ = Assert.CatchAsync(async () => await this.CustomerVimeoClient.ApiClient.ListCustomersAsync());
 		_ = Assert.Catch(this.CustomerVimeoClient.ApiClient.CanNotAccessEndpointWithCustomerAuthedClient);
 		Assert.DoesNotThrow(this.VimeoClient.ApiClient.CanNotAccessEndpointWithCustomerAuthedClient);
 	}
@@ -47,7 +47,7 @@ public sealed class Tests
 	[Test]
 	public async Task TestCustomerBoundApiClient()
 	{
-		var customer = await this.CustomerVimeoClient.ApiClient.GetCustomerAsync(this.UserId);
+		var customer = await this.CustomerVimeoClient.ApiClient.RetrieveCustomerAsync(this.UserId);
 		var sku = customer.Embedded.Products.FirstOrDefault()?.Sku;
 		Console.WriteLine(sku ?? "No sku");
 		if (string.IsNullOrEmpty(sku))
@@ -57,7 +57,7 @@ public sealed class Tests
 	[Test]
 	public async Task TestPaginator()
 	{
-		var paginator = await this.VimeoClient.ApiClient.GetCustomersAsync();
+		var paginator = await this.VimeoClient.ApiClient.ListCustomersAsync();
 		if (paginator.Count is 0)
 			Assert.Fail();
 		foreach (var embeddedCustomer in paginator.Embedded.Customers)
