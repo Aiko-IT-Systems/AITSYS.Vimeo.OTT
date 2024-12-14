@@ -1,14 +1,14 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using AITSYS.Vimeo.Ott.Entities.Base;
-using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Links;
+using AITSYS.Vimeo.Ott.Interfaces;
 
 using Newtonsoft.Json;
 
 namespace AITSYS.Vimeo.Ott.Entities.Customers;
 
-public sealed class OttEvent : OttObject<OttEventLinks, OttEventEmbeddedData>
+public sealed class OttEvent<TOttEmbedded> : OttObject<OttEventLinks, TOttEmbedded> where TOttEmbedded : IOttEmbedded
 {
 	/// <summary>
 	///     The event topic.
@@ -26,5 +26,5 @@ public sealed class OttEvent : OttObject<OttEventLinks, OttEventEmbeddedData>
 	///     Datetime when the event was created.
 	/// </summary>
 	[JsonProperty("created_at")]
-	public DateTime CreatedAt { get; internal set; }
+	public DateTime? CreatedAt { get; internal set; }
 }

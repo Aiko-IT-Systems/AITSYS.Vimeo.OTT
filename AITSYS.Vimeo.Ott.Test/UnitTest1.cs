@@ -2,13 +2,12 @@
 
 using System.Net;
 
-using AITSYS.Vimeo.Ott;
 using AITSYS.Vimeo.Ott.Clients;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace AITSYS.Vimeo.OTT.Test;
+namespace AITSYS.Vimeo.Ott.Test;
 
 public sealed class Tests
 {
@@ -18,7 +17,7 @@ public sealed class Tests
 
 	public int UserId { get; set; }
 
-	[SetUp]
+	[OneTimeSetUp]
 	public void Setup()
 	{
 		var config = new ConfigurationBuilder()
@@ -49,6 +48,7 @@ public sealed class Tests
 	{
 		var customer = await this.CustomerVimeoClient.ApiClient.RetrieveCustomerAsync(this.UserId);
 		var sku = customer.Embedded.Products.FirstOrDefault()?.Sku;
+		Console.WriteLine("----------------------------------");
 		Console.WriteLine(sku ?? "No sku");
 		if (string.IsNullOrEmpty(sku))
 			Assert.Fail();
@@ -57,15 +57,24 @@ public sealed class Tests
 	[Test]
 	public async Task TestPaginator()
 	{
-		var paginator = await this.VimeoClient.ApiClient.ListCustomersAsync();
+		var paginator = await this.VimeoClient.ApiClient.ListCustomersAsync(status: "all");
 		if (paginator.Count is 0)
 			Assert.Fail();
 		foreach (var embeddedCustomer in paginator.Embedded.Customers)
 		{
+			Console.WriteLine("----------------------------------");
 			Console.WriteLine(embeddedCustomer.Name);
+			Console.WriteLine(embeddedCustomer.Plan);
 			Console.WriteLine(embeddedCustomer.Embedded.LatestEvent.Embedded.Product);
 			Console.WriteLine(embeddedCustomer.Embedded.LatestEvent.Topic);
-			Assert.Pass();
+			Console.WriteLine(embeddedCustomer.Embedded.LatestEvent.Data.Status);
+			var eventPaginator = await this.VimeoClient.ApiClient.RetrieveCustomerEventsAsync(embeddedCustomer.Id);
+			if (eventPaginator.Count is 0)
+				Assert.Fail();
+			var firstEvent = eventPaginator.Embedded.Events.First();
+			Console.WriteLine(firstEvent.Embedded.Product?.Name);
+			Console.WriteLine(firstEvent.Topic);
+			Console.WriteLine(firstEvent.Data.Status);
 		}
 	}
 }

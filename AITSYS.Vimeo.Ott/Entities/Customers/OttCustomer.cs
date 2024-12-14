@@ -65,8 +65,8 @@ public sealed class OttCustomer<TOttEmbedded> : OttIdObject<OttCustomerLinks, TO
 	/// <summary>
 	///     Whether the customer is opt-in to marketing emails.
 	/// </summary>
-	[JsonProperty("marketing_opt_in")]
-	public bool MarketingOptIn { get; internal set; }
+	[JsonProperty("marketing_opt_in", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? MarketingOptIn { get; internal set; }
 
 	/// <summary>
 	///     Whether the customer is registered to the site.

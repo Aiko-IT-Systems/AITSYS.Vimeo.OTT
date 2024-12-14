@@ -4,6 +4,7 @@ using AITSYS.Vimeo.Ott.Entities.Customers;
 using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
 using AITSYS.Vimeo.Ott.Entities.Products;
+using AITSYS.Vimeo.Ott.Interfaces;
 using AITSYS.Vimeo.Ott.Logging;
 using AITSYS.Vimeo.Ott.Rest;
 
@@ -113,7 +114,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 	/// </summary>
 	/// <param name="customerId">The <c>id</c> of the customer events are retrieved for.</param>
 	/// <returns>The requested events.</returns>
-	internal async Task<OttPagination<OttEventsEmbeddedData>> RetrieveCustomerEventsAsync(int customerId)
+	internal async Task<OttPagination<OttEventsEmbeddedData<OttEventProductObjectEmbeddedData>>> RetrieveCustomerEventsAsync(int customerId)
 	{
 		var route = $"{Endpoints.CUSTOMERS}/:customer_id{Endpoints.EVENTS}";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
@@ -122,7 +123,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttPagination<OttEventsEmbeddedData>>(res.Response)!;
+		return JsonConvert.DeserializeObject<OttPagination<OttEventsEmbeddedData<OttEventProductObjectEmbeddedData>>>(res.Response)!;
 	}
 
 	/// <summary>
