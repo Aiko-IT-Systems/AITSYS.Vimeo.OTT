@@ -50,7 +50,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 	/// <summary>
 	///     Customers can be listed for your account or for a given product.
 	/// </summary>
-	/// <param name="product">The <c>href</c> of a product.</param>
+	/// <param name="productId">The <c>id</c> of a product.</param>
 	/// <param name="email">The email address to find in the paginated results.</param>
 	/// <param name="query">
 	///     The query to search and filter the paginated results. By default filters for customers with status
@@ -66,16 +66,15 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 	/// <param name="page">The page number of the paginated result.</param>
 	/// <param name="perPage">The page size of the paginated result.</param>
 	/// <returns>A paginated result.</returns>
-	internal async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(string? product = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)
+	internal async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(string? productId = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)
 	{
 		this.CanNotAccessEndpointWithCustomerAuthedClient();
 		var route = $"{Endpoints.CUSTOMERS}";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
-
 		var url = Utilities.GetApiUriFor(path).AddParameter(nameof(page), page.ToString()).AddParameter("per_page", perPage.ToString());
-		if (product is not null)
-			url = url.AddParameter(nameof(product), product);
+		if (productId is not null)
+			url = url.AddParameter("product", $"{Utilities.GetApiBaseUri()}{Endpoints.PRODUCTS}/{productId}");
 		if (email is not null)
 			url = url.AddParameter(nameof(email), email);
 		if (query is not null)
@@ -88,19 +87,32 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		return JsonConvert.DeserializeObject<OttPagination<OttCustomersEmbeddedData>>(res.Response)!;
 	}
 
-	internal async Task<OttCustomer<OttCustomerProductEmbeddedData>> RetrieveCustomerAsync(int customerId)
+	/// <summary>
+	///     Retrieves an existing customer. You can optionally specify a product parameter to scope the customer retrieval to
+	///     it (ie. “Is this customer subscribed to this product?”).
+	/// </summary>
+	/// <param name="customerId">The <c>id</c> of the customer being retrieved.</param>
+	/// <param name="productId">The <c>id</c> of a product.</param>
+	/// <returns>The requested customer.</returns>
+	internal async Task<OttCustomer<OttCustomerProductEmbeddedData>> RetrieveCustomerAsync(int customerId, int? productId = null)
 	{
 		var route = $"{Endpoints.CUSTOMERS}/:customer_id";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
 		{
 			customer_id = customerId
 		}, out var path);
-
 		var url = Utilities.GetApiUriFor(path);
+		if (productId is not null)
+			url = url.AddParameter("product", $"{Utilities.GetApiBaseUri()}{Endpoints.PRODUCTS}/{productId}");
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		return JsonConvert.DeserializeObject<OttCustomer<OttCustomerProductEmbeddedData>>(res.Response)!;
 	}
 
+	/// <summary>
+	///     Retrieves events of an existing customers.
+	/// </summary>
+	/// <param name="customerId">The <c>id</c> of the customer events are retrieved for.</param>
+	/// <returns>The requested events.</returns>
 	internal async Task<OttPagination<OttEventsEmbeddedData>> RetrieveCustomerEventsAsync(int customerId)
 	{
 		var route = $"{Endpoints.CUSTOMERS}/:customer_id{Endpoints.EVENTS}";
@@ -108,12 +120,16 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		{
 			customer_id = customerId
 		}, out var path);
-
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		return JsonConvert.DeserializeObject<OttPagination<OttEventsEmbeddedData>>(res.Response)!;
 	}
 
+	/// <summary>
+	///     Retrieves products of an existing customers.
+	/// </summary>
+	/// <param name="customerId">The <c>id</c> of the customer are being retrieved for.</param>
+	/// <returns>The requested products.</returns>
 	internal async Task<OttPagination<OttCustomerProductEmbeddedData>> RetrieveCustomerProductsAsync(int customerId)
 	{
 		var route = $"{Endpoints.CUSTOMERS}/:customer_id{Endpoints.PRODUCTS}";
@@ -121,7 +137,6 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		{
 			customer_id = customerId
 		}, out var path);
-
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		return JsonConvert.DeserializeObject<OttPagination<OttCustomerProductEmbeddedData>>(res.Response)!;
@@ -148,7 +163,6 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		var route = $"{Endpoints.PRODUCTS}";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
-
 		var url = Utilities.GetApiUriFor(path).AddParameter(nameof(page), page.ToString()).AddParameter("per_page", perPage.ToString());
 		if (query is not null)
 			url = url.AddParameter(nameof(query), query);
@@ -160,6 +174,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		return JsonConvert.DeserializeObject<OttPagination<OttProductsEmbeddedData>>(res.Response)!;
 	}
 
+	/// <summary>
+	///     Retrieves an existing product.
+	/// </summary>
+	/// <param name="productId">The <c>id</c> of the product being retrieved.</param>
+	/// <returns>The requested product.</returns>
 	internal async Task<OttProduct<OttProductEmbeddedData>> RetrieveProductAsync(int productId)
 	{
 		var route = $"{Endpoints.PRODUCTS}/:product_id";
@@ -167,7 +186,6 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		{
 			product_id = productId
 		}, out var path);
-
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		return JsonConvert.DeserializeObject<OttProduct<OttProductEmbeddedData>>(res.Response)!;
