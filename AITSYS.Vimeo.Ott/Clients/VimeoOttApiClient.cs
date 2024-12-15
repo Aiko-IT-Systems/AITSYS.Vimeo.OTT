@@ -4,7 +4,6 @@ using AITSYS.Vimeo.Ott.Entities.Customers;
 using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
 using AITSYS.Vimeo.Ott.Entities.Products;
-using AITSYS.Vimeo.Ott.Interfaces;
 using AITSYS.Vimeo.Ott.Logging;
 using AITSYS.Vimeo.Ott.Rest;
 
@@ -85,7 +84,15 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		if (sort is not null)
 			url = url.AddParameter(nameof(sort), sort);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttPagination<OttCustomersEmbeddedData>>(res.Response)!;
+		var paginator = JsonConvert.DeserializeObject<OttPagination<OttCustomersEmbeddedData>>(res.Response)!;
+		paginator.Client = this.Client;
+		foreach (var customer in paginator.Embedded.Customers)
+		{
+			customer.Client = this.Client;
+			customer.Embedded.LatestEvent.Client = this.Client;
+		}
+
+		return paginator;
 	}
 
 	/// <summary>
@@ -106,7 +113,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		if (productId is not null)
 			url = url.AddParameter("product", $"{Utilities.GetApiBaseUri()}{Endpoints.PRODUCTS}/{productId}");
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttCustomer<OttCustomerProductEmbeddedData>>(res.Response)!;
+		var obj = JsonConvert.DeserializeObject<OttCustomer<OttCustomerProductEmbeddedData>>(res.Response)!;
+		obj.Client = this.Client;
+		foreach (var product in obj.Embedded.Products)
+			product.Client = this.Client;
+		return obj;
 	}
 
 	/// <summary>
@@ -123,7 +134,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttPagination<OttEventsEmbeddedData<OttEventProductObjectEmbeddedData>>>(res.Response)!;
+		var paginator = JsonConvert.DeserializeObject<OttPagination<OttEventsEmbeddedData<OttEventProductObjectEmbeddedData>>>(res.Response)!;
+		paginator.Client = this.Client;
+		foreach (var @event in paginator.Embedded.Events)
+			@event.Client = this.Client;
+		return paginator;
 	}
 
 	/// <summary>
@@ -140,7 +155,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttPagination<OttCustomerProductEmbeddedData>>(res.Response)!;
+		var paginator = JsonConvert.DeserializeObject<OttPagination<OttCustomerProductEmbeddedData>>(res.Response)!;
+		paginator.Client = this.Client;
+		foreach (var product in paginator.Embedded.Products)
+			product.Client = this.Client;
+		return paginator;
 	}
 
 	// https://api.vhx.tv/customers/40035072/watching
@@ -172,7 +191,11 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		if (sort is not null)
 			url = url.AddParameter(nameof(sort), sort);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttPagination<OttProductsEmbeddedData>>(res.Response)!;
+		var paginator = JsonConvert.DeserializeObject<OttPagination<OttProductsEmbeddedData>>(res.Response)!;
+		paginator.Client = this.Client;
+		foreach (var product in paginator.Embedded.Products)
+			product.Client = this.Client;
+		return paginator;
 	}
 
 	/// <summary>
@@ -189,6 +212,8 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<OttProduct<OttProductEmbeddedData>>(res.Response)!;
+		var obj = JsonConvert.DeserializeObject<OttProduct<OttProductEmbeddedData>>(res.Response)!;
+		obj.Client = this.Client;
+		return obj;
 	}
 }

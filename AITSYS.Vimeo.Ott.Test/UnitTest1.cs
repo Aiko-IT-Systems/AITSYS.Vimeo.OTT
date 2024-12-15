@@ -47,6 +47,11 @@ public sealed class Tests
 	public async Task TestCustomerBoundApiClient()
 	{
 		var customer = await this.CustomerVimeoClient.ApiClient.RetrieveCustomerAsync(this.UserId);
+		Assert.Multiple(() =>
+		{
+			Assert.That(customer.Client, Is.Not.EqualTo(null));
+			Assert.That(customer.Embedded.Products.All(p => p.Client is not null));
+		});
 		var sku = customer.Embedded.Products.FirstOrDefault()?.Sku;
 		Console.WriteLine("----------------------------------");
 		Console.WriteLine(sku ?? "No sku");
@@ -62,6 +67,11 @@ public sealed class Tests
 			Assert.Fail();
 		foreach (var embeddedCustomer in paginator.Embedded.Customers)
 		{
+			Assert.Multiple(() =>
+			{
+				Assert.That(embeddedCustomer.Client, Is.Not.EqualTo(null));
+				Assert.That(embeddedCustomer.Embedded.LatestEvent.Client, Is.Not.EqualTo(null));
+			});
 			Console.WriteLine("----------------------------------");
 			Console.WriteLine(embeddedCustomer.Name);
 			Console.WriteLine(embeddedCustomer.Plan);
@@ -71,6 +81,7 @@ public sealed class Tests
 			var eventPaginator = await this.VimeoClient.ApiClient.RetrieveCustomerEventsAsync(embeddedCustomer.Id);
 			if (eventPaginator.Count is 0)
 				Assert.Fail();
+			Assert.That(eventPaginator.Embedded.Events.All(e => e.Client is not null));
 			var firstEvent = eventPaginator.Embedded.Events.First();
 			Console.WriteLine(firstEvent.Embedded.Product?.Name);
 			Console.WriteLine(firstEvent.Topic);

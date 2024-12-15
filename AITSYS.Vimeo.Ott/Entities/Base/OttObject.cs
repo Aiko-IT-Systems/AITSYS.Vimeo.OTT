@@ -1,5 +1,6 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
+using AITSYS.Vimeo.Ott.Clients;
 using AITSYS.Vimeo.Ott.Interfaces;
 
 using Newtonsoft.Json;
@@ -13,6 +14,11 @@ namespace AITSYS.Vimeo.Ott.Entities.Base;
 /// <typeparam name="TOttEmbedded">The type of the embedded object.</typeparam>
 public class OttObject<TOttHalLinks, TOttEmbedded> : IOttObject<TOttHalLinks, TOttEmbedded> where TOttHalLinks : IHalLinks where TOttEmbedded : IOttEmbedded
 {
+	/// <summary>
+	///     Gets the client.
+	/// </summary>
+	public VimeoOttClient Client { get; internal set; }
+
 	/// <summary>
 	///     Gets the HAL links.
 	/// </summary>

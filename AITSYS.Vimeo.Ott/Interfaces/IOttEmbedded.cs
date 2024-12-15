@@ -2,5 +2,4 @@
 
 namespace AITSYS.Vimeo.Ott.Interfaces;
 
-public interface IOttEmbedded
-{ }
+public interface IOttEmbedded;

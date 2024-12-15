@@ -4,5 +4,4 @@ using AITSYS.Vimeo.Ott.Interfaces;
 
 namespace AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 
-public sealed class OttProductEmptyEmbeddedData : IOttEmbedded
-{ }
+public sealed class OttProductEmptyEmbeddedData : IOttEmbedded;
