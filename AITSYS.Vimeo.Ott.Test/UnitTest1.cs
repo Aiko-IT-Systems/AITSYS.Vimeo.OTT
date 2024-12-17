@@ -23,12 +23,12 @@ public sealed class Tests
 			.Build();
 		this.VimeoClient = new(new()
 		{
-			ApiKey = config["token"],
+			ApiKey = config["token"] ?? Environment.GetEnvironmentVariable("VIMEO_TEST_TOKEN"),
 			MinimumLogLevel = LogLevel.Debug /*,
 			Proxy = new WebProxy("127.0.0.1:8000")*/
 		});
 
-		this.UserId = Convert.ToInt32(config["user_id"]);
+		this.UserId = Convert.ToInt32(config["user_id"] ?? Environment.GetEnvironmentVariable("VIMEO_TEST_USER"));
 
 		this.CustomerVimeoClient = this.VimeoClient.GetClientForCustomer($"https://api.vhx.tv/customers/{this.UserId}");
 	}

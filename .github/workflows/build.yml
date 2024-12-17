@@ -39,6 +39,9 @@ jobs:
               run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.sln
             - name: Test library
               run: dotnet test -v minimal -c Release --no-restore --no-build AITSYS.Vimeo.Ott.sln
+              env:
+                VIMEO_TEST_TOKEN: ${{ secrets.VIMEO_TEST_TOKEN }}
+                VIMEO_TEST_USER: ${{ secrets.VIMEO_TEST_USER }}
     pack:
         timeout-minutes: 15
         runs-on: ubuntu-latest
