@@ -34,7 +34,7 @@ jobs:
               with:
                   dotnet-version: 9.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v AITSYS.Vimeo.Ott.sln
+              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
             - name: Build library
               run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.sln
             - name: Test library
