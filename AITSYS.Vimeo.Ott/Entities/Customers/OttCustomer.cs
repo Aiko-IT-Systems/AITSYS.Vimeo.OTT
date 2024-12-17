@@ -1,7 +1,9 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
 using AITSYS.Vimeo.Ott.Entities.Base;
+using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Links;
+using AITSYS.Vimeo.Ott.Entities.Pagination;
 using AITSYS.Vimeo.Ott.Interfaces;
 
 using Newtonsoft.Json;
@@ -89,4 +91,12 @@ public sealed class OttCustomer<TOttEmbedded> : OttIdObject<OttCustomerLinks, TO
 	/// </summary>
 	[JsonProperty("notification_settings")]
 	public OttNotificationSettings NotificationSettings { get; internal set; }
+
+	/// <inheritdoc cref="Clients.VimeoOttApiClient.RetrieveCustomerEventsAsync" />
+	public async Task<OttPagination<OttEventsEmbeddedData<OttEventProductObjectEmbeddedData>>> RetrieveEventsAsync()
+		=> await this.Client.ApiClient.RetrieveCustomerEventsAsync(this.Id);
+
+	/// <inheritdoc cref="Clients.VimeoOttApiClient.RetrieveCustomerProductsAsync" />
+	public async Task<OttPagination<OttCustomerProductEmbeddedData>> RetrieveProductsAsync()
+		=> await this.Client.ApiClient.RetrieveCustomerProductsAsync(this.Id);
 }

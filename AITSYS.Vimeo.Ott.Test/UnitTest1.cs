@@ -1,7 +1,5 @@
 // Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
 
-using System.Net;
-
 using AITSYS.Vimeo.Ott.Clients;
 
 using Microsoft.Extensions.Configuration;
@@ -26,8 +24,8 @@ public sealed class Tests
 		this.VimeoClient = new(new()
 		{
 			ApiKey = config["token"],
-			MinimumLogLevel = LogLevel.Debug,
-			Proxy = new WebProxy("127.0.0.1:8000")
+			MinimumLogLevel = LogLevel.Debug /*,
+			Proxy = new WebProxy("127.0.0.1:8000")*/
 		});
 
 		this.UserId = Convert.ToInt32(config["user_id"]);
@@ -57,6 +55,20 @@ public sealed class Tests
 		Console.WriteLine(sku ?? "No sku");
 		if (string.IsNullOrEmpty(sku))
 			Assert.Fail();
+	}
+
+	[Test]
+	public Task TestVariousMethods()
+	{
+		Assert.DoesNotThrowAsync(async () =>
+		{
+			var customer = await this.CustomerVimeoClient.ApiClient.RetrieveCustomerAsync(this.UserId);
+			var products = await customer.RetrieveProductsAsync();
+			Assert.That(products, Is.Not.Empty);
+			var events = await customer.RetrieveEventsAsync();
+			Assert.That(events, Is.Not.Empty);
+		});
+		return Task.CompletedTask;
 	}
 
 	[Test]

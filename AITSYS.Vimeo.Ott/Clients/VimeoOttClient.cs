@@ -3,6 +3,10 @@
 using System.Reflection;
 
 using AITSYS.Vimeo.Ott.Entities;
+using AITSYS.Vimeo.Ott.Entities.Customers;
+using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
+using AITSYS.Vimeo.Ott.Entities.Pagination;
+using AITSYS.Vimeo.Ott.Entities.Products;
 using AITSYS.Vimeo.Ott.Logging;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -75,4 +79,20 @@ public sealed class VimeoOttClient
 	public bool CustomerBound { get; }
 
 	internal VimeoOttApiClient ApiClient { get; }
+
+	/// <inheritdoc cref="VimeoOttApiClient.ListCustomersAsync" />
+	public async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(string? productId = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)
+		=> await this.ApiClient.ListCustomersAsync(productId, email, query, sort, status, page, perPage);
+
+	/// <inheritdoc cref="VimeoOttApiClient.RetrieveCustomerAsync" />
+	public async Task<OttCustomer<OttCustomerProductEmbeddedData>> RetrieveCustomerAsync(int customerId, int? productId = null)
+		=> await this.ApiClient.RetrieveCustomerAsync(customerId, productId);
+
+	/// <inheritdoc cref="VimeoOttApiClient.ListProductsAsync" />
+	public async Task<OttPagination<OttProductsEmbeddedData>> ListProductsAsync(string? query = null, bool? active = null, string? sort = null, int page = 1, int perPage = 50)
+		=> await this.ApiClient.ListProductsAsync(query, active, sort, page, perPage);
+
+	/// <inheritdoc cref="VimeoOttApiClient.RetrieveProductAsync" />
+	public async Task<OttProduct<OttProductEmbeddedData>> RetrieveProductAsync(int productId)
+		=> await this.ApiClient.RetrieveProductAsync(productId);
 }

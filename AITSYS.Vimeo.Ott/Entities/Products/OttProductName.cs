@@ -9,6 +9,9 @@ namespace AITSYS.Vimeo.Ott.Entities.Products;
 /// </summary>
 public sealed class OttProductName
 {
+	/// <summary>
+	///     Gets the product name.
+	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 }
