@@ -51,33 +51,46 @@ public static class ExtensionMethods
 	/// <returns>The <see cref="IEndpointRouteBuilder" /> with the mapped webhook endpoint.</returns>
 	public static IEndpointRouteBuilder MapVimeoOttWebhook(this IEndpointRouteBuilder endpoints, string pattern, string authenticationScheme)
 	{
-		var methods = Assembly.GetExecutingAssembly()
-			.GetTypes()
-			.SelectMany(t => t.GetMethods())
-			.Where(m => m.GetCustomAttributes(typeof(VimeoOttWebhookAttribute), false).Length > 0)
+		var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+		var methods = assemblies
+			.SelectMany(assembly => assembly.GetTypes())
+			.SelectMany(type => type.GetMethods())
+			.Where(method => method.GetCustomAttributes(typeof(VimeoOttWebhookAttribute), false).Length > 0)
 			.ToArray();
+
+		Console.WriteLine($"Found {methods.Length} methods with VimeoOttWebhookAttribute.");
 
 		foreach (var method in methods)
 		{
 			var attribute = method.GetCustomAttribute<VimeoOttWebhookAttribute>();
-			if (attribute != null)
-				endpoints.MapPost(pattern, async context =>
+			if (attribute == null)
+				continue;
+
+			Console.WriteLine($"Registering method {method.Name} for {string.Join(", ", attribute.Topics)}");
+			endpoints.MapPost(pattern, async context =>
+				{
+					var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+					var webhook = JsonConvert.DeserializeObject<OttWebhook>(body);
+					if (webhook != null && attribute.Topics.Contains(webhook.Topic))
 					{
-						var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
-						var webhook = JsonConvert.DeserializeObject<OttWebhook>(body);
-						if (webhook != null && attribute.Topics.Contains(webhook.Topic))
-						{
-							var instance = Activator.CreateInstance(method.DeclaringType!);
-							var parameters = method.GetParameters().Select(p => context.RequestServices.GetService(p.ParameterType)).ToArray();
+						var instance = Activator.CreateInstance(method.DeclaringType!);
+						var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
+						if (instance != null)
 							await (Task)method.Invoke(instance, parameters)!;
-						}
 						else
-							context.Response.StatusCode = StatusCodes.Status400BadRequest;
-					})
-					.RequireAuthorization(new AuthorizeAttribute
-					{
-						AuthenticationSchemes = authenticationScheme
-					});
+						{
+							Console.WriteLine("Failed to create an instance of the method's declaring type.");
+							context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+						}
+					}
+					else
+						context.Response.StatusCode = StatusCodes.Status400BadRequest;
+				})
+				.RequireAuthorization(new AuthorizeAttribute
+				{
+					AuthenticationSchemes = authenticationScheme
+				});
 		}
 
 		return endpoints;
