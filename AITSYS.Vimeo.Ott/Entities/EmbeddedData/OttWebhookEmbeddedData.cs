@@ -10,5 +10,5 @@ namespace AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 public sealed class OttWebhookEmbeddedData : IOttEmbedded
 {
 	[JsonProperty("customer", NullValueHandling = NullValueHandling.Ignore)]
-	public OttCustomer<OttCustomerProductEmbeddedData> Customer { get; internal set; } = [];
+	public OttCustomer<OttCustomerProductEmbeddedData> Customer { get; internal set; }
 }

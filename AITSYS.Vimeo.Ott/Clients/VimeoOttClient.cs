@@ -81,11 +81,11 @@ public sealed class VimeoOttClient
 	internal VimeoOttApiClient ApiClient { get; }
 
 	/// <inheritdoc cref="VimeoOttApiClient.ListCustomersAsync" />
-	public async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(string? productId = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)
+	public async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(int? productId = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)
 		=> await this.ApiClient.ListCustomersAsync(productId, email, query, sort, status, page, perPage);
 
 	/// <inheritdoc cref="VimeoOttApiClient.RetrieveCustomerAsync" />
-	public async Task<OttCustomer<OttCustomerProductEmbeddedData>> RetrieveCustomerAsync(int customerId, int? productId = null)
+	public async Task<OttCustomer<OttCustomerProductEmbeddedData>?> RetrieveCustomerAsync(int customerId, int? productId = null)
 		=> await this.ApiClient.RetrieveCustomerAsync(customerId, productId);
 
 	/// <inheritdoc cref="VimeoOttApiClient.ListProductsAsync" />
@@ -93,6 +93,6 @@ public sealed class VimeoOttClient
 		=> await this.ApiClient.ListProductsAsync(query, active, sort, page, perPage);
 
 	/// <inheritdoc cref="VimeoOttApiClient.RetrieveProductAsync" />
-	public async Task<OttProduct<OttProductEmbeddedData>> RetrieveProductAsync(int productId)
+	public async Task<OttProduct<OttProductEmbeddedData>?> RetrieveProductAsync(int productId)
 		=> await this.ApiClient.RetrieveProductAsync(productId);
 }
