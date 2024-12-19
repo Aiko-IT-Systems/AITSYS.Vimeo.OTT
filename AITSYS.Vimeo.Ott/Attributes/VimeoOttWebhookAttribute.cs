@@ -1,24 +1,14 @@
-// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
-
 namespace AITSYS.Vimeo.Ott.Attributes;
 
 /// <summary>
-/// Marks a method to handle a topic for incoming ott webhooks.
+///     Marks a method to handle one or more topics for incoming OTT webhooks.
 /// </summary>
+/// <param name="topics">The topics to handle.</param>
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class VimeoOttWebhookAttribute : Attribute
+public sealed class VimeoOttWebhookAttribute(params string[] topics) : Attribute
 {
 	/// <summary>
-	/// Marks a method to handle a topic for incoming ott webhooks.
+	///     Gets the webhooks topics.
 	/// </summary>
-	/// <param name="topic">The topic to handle.</param>
-	public VimeoOttWebhookAttribute(string topic)
-	{
-		this.Topic = topic;
-	}
-
-	/// <summary>
-	/// Gets the webhooks topic.
-	/// </summary>
-	public string Topic { get; }
+	public IEnumerable<string> Topics { get; } = topics;
 }

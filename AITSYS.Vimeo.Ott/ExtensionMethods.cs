@@ -1,20 +1,22 @@
-// Copyright 2025 Aiko IT Systems. See https://github.com/Aiko-IT-Systems/AITSYS.Vimeo.OTT/blob/main/LICENSE.md for the license.
-
 using System.Reflection;
 
 using AITSYS.Vimeo.Ott.Attributes;
 using AITSYS.Vimeo.Ott.Clients;
+using AITSYS.Vimeo.Ott.Entities;
 using AITSYS.Vimeo.Ott.Logging;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
 
 namespace AITSYS.Vimeo.Ott;
 
 /// <summary>
-/// Represents various extension methods.
+///     Represents various extension methods.
 /// </summary>
 public static class ExtensionMethods
 {
@@ -61,9 +63,16 @@ public static class ExtensionMethods
 			if (attribute != null)
 				endpoints.MapPost(pattern, async context =>
 					{
-						var instance = Activator.CreateInstance(method.DeclaringType);
-						var parameters = method.GetParameters().Select(p => context.RequestServices.GetService(p.ParameterType)).ToArray();
-						await (Task)method.Invoke(instance, parameters);
+						var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+						var webhook = JsonConvert.DeserializeObject<OttWebhook>(body);
+						if (webhook != null && attribute.Topics.Contains(webhook.Topic))
+						{
+							var instance = Activator.CreateInstance(method.DeclaringType!);
+							var parameters = method.GetParameters().Select(p => context.RequestServices.GetService(p.ParameterType)).ToArray();
+							await (Task)method.Invoke(instance, parameters)!;
+						}
+						else
+							context.Response.StatusCode = StatusCodes.Status400BadRequest;
 					})
 					.RequireAuthorization(new AuthorizeAttribute
 					{
