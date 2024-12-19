@@ -5,7 +5,7 @@ namespace AITSYS.Vimeo.Ott;
 /// <summary>
 ///     Represents a query uri builder.
 /// </summary>
-internal class QueryUriBuilder
+internal sealed class QueryUriBuilder
 {
 	/// <summary>
 	///     Gets the query parameters.

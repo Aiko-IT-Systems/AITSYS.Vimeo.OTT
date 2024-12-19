@@ -15,10 +15,20 @@ using Newtonsoft.Json;
 
 namespace AITSYS.Vimeo.Ott.Clients;
 
+/// <summary>
+///     Represents a client for the Vimeo OTT API.
+/// </summary>
+/// <param name="client">The client.</param>
 internal sealed class VimeoOttApiClient(VimeoOttClient client)
 {
+	/// <summary>
+	///     Gets the client.
+	/// </summary>
 	internal VimeoOttClient Client { get; } = client;
 
+	/// <summary>
+	///     Gets the rest client.
+	/// </summary>
 	internal RestClient RestClient { get; } = new(client);
 
 	/// <summary>
@@ -40,6 +50,13 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		return req.WaitForCompletionAsync();
 	}
 
+	/// <summary>
+	///     Returns an execption, if a customer authenticated client tries to access a restricted endpoint.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">
+	///     Thrown when a customer authenticated client tries to access a restricted
+	///     endpoint.
+	/// </exception>
 	internal void CanNotAccessEndpointWithCustomerAuthedClient()
 	{
 		if (!this.Client.CustomerBound)
@@ -47,6 +64,24 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 
 		this.Client.Logger.LogCritical(LoggerEvents.RestError, "Tried to access a restricted endpoint with a customer bound client");
 		throw new InvalidOperationException("A customer authenticated client can not access the current endpoint");
+	}
+
+	/// <summary>
+	///     Executes a raw request.
+	/// </summary>
+	/// <param name="url">The url to call.</param>
+	/// <param name="method">The method to use.</param>
+	/// <param name="payload">The payload to send.</param>
+	/// <returns>The response body.</returns>
+	internal async Task<string> ExecuteRawRequestAsync(string url, RestRequestMethod method, string? payload = null)
+	{
+		var res = await this.DoRequestAsync(new("unlimited", null!), new(url), method, "unlimited", payload is not null
+			? new Dictionary<string, string>
+			{
+				["Content-Type"] = "application/json"
+			}
+			: null, payload).ConfigureAwait(false);
+		return res.Response;
 	}
 
 	/// <summary>

@@ -7,7 +7,7 @@ namespace AITSYS.Vimeo.Ott.Entities;
 ///     Implements an async version of a <see cref="ManualResetEvent" />
 ///     This class does currently not support Timeouts or the use of CancellationTokens
 /// </summary>
-internal class AsyncManualResetEvent
+internal sealed class AsyncManualResetEvent
 {
 	/// <summary>
 	///     The task completion source.

@@ -8,14 +8,22 @@ using AITSYS.Vimeo.Ott.Entities.EmbeddedData;
 using AITSYS.Vimeo.Ott.Entities.Pagination;
 using AITSYS.Vimeo.Ott.Entities.Products;
 using AITSYS.Vimeo.Ott.Logging;
+using AITSYS.Vimeo.Ott.Rest;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AITSYS.Vimeo.Ott.Clients;
 
+/// <summary>
+///     Represents a client for Vimeo OTT.
+/// </summary>
 public sealed class VimeoOttClient
 {
+	/// <summary>
+	///     Initializes a new instance of the <see cref="VimeoOttClient" /> class.
+	/// </summary>
+	/// <param name="configuration">The configuration.</param>
 	public VimeoOttClient(VimeoOttConfiguration configuration)
 	{
 		this.Configuration = configuration;
@@ -66,19 +74,44 @@ public sealed class VimeoOttClient
 		this.Logger.LogInformation(LoggerEvents.Library, "{bound}VHX client is ready", this.CustomerBound ? "Customer bound " : "");
 	}
 
+	/// <summary>
+	///     Gets the library version.
+	/// </summary>
 	public string LibraryVersion { get; }
 
+	/// <summary>
+	///     Gets the library name.
+	/// </summary>
 	public string LibraryName { get; }
 
+	/// <summary>
+	///     Gets the service provider.
+	/// </summary>
 	public IServiceProvider? ServiceProvider { get; }
 
+	/// <summary>
+	///     Gets the logger.
+	/// </summary>
 	public ILogger Logger { get; }
 
+	/// <summary>
+	///     Gets the configuration.
+	/// </summary>
 	internal VimeoOttConfiguration Configuration { get; }
 
+	/// <summary>
+	///     Gets a value indicating whether the client is bound to a customer.
+	/// </summary>
 	public bool CustomerBound { get; }
 
+	/// <summary>
+	///     Gets the API client.
+	/// </summary>
 	internal VimeoOttApiClient ApiClient { get; }
+
+	/// <inheritdoc cref="VimeoOttApiClient.ExecuteRawRequestAsync" />
+	public async Task<string> ExecuteRawRequestAsync(string url, RestRequestMethod method, string? payload = null)
+		=> await this.ApiClient.ExecuteRawRequestAsync(url, method, payload);
 
 	/// <inheritdoc cref="VimeoOttApiClient.ListCustomersAsync" />
 	public async Task<OttPagination<OttCustomersEmbeddedData>> ListCustomersAsync(int? productId = null, string? email = null, string? query = null, string? sort = null, string? status = null, int page = 1, int perPage = 50)

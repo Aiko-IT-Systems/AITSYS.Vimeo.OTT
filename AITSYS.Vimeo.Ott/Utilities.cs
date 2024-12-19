@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AITSYS.Vimeo.Ott;
 
+/// <summary>
+///     Represents a utility class for various operations.
+/// </summary>
 public static class Utilities
 {
 	/// <summary>
