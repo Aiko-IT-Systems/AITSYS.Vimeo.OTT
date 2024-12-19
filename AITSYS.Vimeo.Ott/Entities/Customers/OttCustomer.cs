@@ -87,6 +87,78 @@ public sealed class OttCustomer<TOttEmbedded> : OttIdObject<OttCustomerLinks, TO
 	public bool SubscribedToSite { get; internal set; }
 
 	/// <summary>
+	///     The campaign associated with the customer.
+	/// </summary>
+	[JsonProperty("campaign", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Campaign { get; set; }
+
+	/// <summary>
+	///     The coupon code used by the customer.
+	/// </summary>
+	[JsonProperty("coupon_code", NullValueHandling = NullValueHandling.Ignore)]
+	public string? CouponCode { get; set; }
+
+	/// <summary>
+	///     The first name of the customer.
+	/// </summary>
+	[JsonProperty("first_name", NullValueHandling = NullValueHandling.Ignore)]
+	public string FirstName { get; set; }
+
+	/// <summary>
+	///     The last name of the customer.
+	/// </summary>
+	[JsonProperty("last_name", NullValueHandling = NullValueHandling.Ignore)]
+	public string LastName { get; set; }
+
+	/// <summary>
+	///     The date of the last payment made by the customer.
+	/// </summary>
+	[JsonProperty("last_payment_date", NullValueHandling = NullValueHandling.Ignore)]
+	public DateTime? LastPaymentDate { get; set; }
+
+	/// <summary>
+	///     The date of the next payment due from the customer.
+	/// </summary>
+	[JsonProperty("next_payment_date", NullValueHandling = NullValueHandling.Ignore)]
+	public DateTime? NextPaymentDate { get; set; }
+
+	/// <summary>
+	///     The end date of the customer's subscription pause.
+	/// </summary>
+	[JsonProperty("pause_end_date", NullValueHandling = NullValueHandling.Ignore)]
+	public DateTime? PauseEndDate { get; set; }
+
+	/// <summary>
+	///     The promotion code used by the customer.
+	/// </summary>
+	[JsonProperty("promotion_code", NullValueHandling = NullValueHandling.Ignore)]
+	public string? PromotionCode { get; set; }
+
+	/// <summary>
+	///     The referrer of the customer.
+	/// </summary>
+	[JsonProperty("referrer", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Referrer { get; set; }
+
+	/// <summary>
+	///     The subscription frequency of the customer.
+	/// </summary>
+	[JsonProperty("subscription_frequency", NullValueHandling = NullValueHandling.Ignore)]
+	public string? SubscriptionFrequency { get; set; }
+
+	/// <summary>
+	///     The subscription price of the customer.
+	/// </summary>
+	[JsonProperty("subscription_price", NullValueHandling = NullValueHandling.Ignore)]
+	public int? SubscriptionPrice { get; set; }
+
+	/// <summary>
+	///     The subscription status of the customer.
+	/// </summary>
+	[JsonProperty("subscription_status", NullValueHandling = NullValueHandling.Ignore)]
+	public string SubscriptionStatus { get; set; }
+
+	/// <summary>
 	///     The customers notification settings.
 	/// </summary>
 	[JsonProperty("notification_settings")]
