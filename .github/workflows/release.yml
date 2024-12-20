@@ -61,10 +61,6 @@ jobs:
 #                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 #                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
 #                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-            - name: Remove invalid packages
-              shell: pwsh
-              run: rm *.symbols.*
-              working-directory: ./avo-artifacts
             - name: Publish to NuGet
               shell: pwsh
               run: dotnet nuget push --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} * --skip-duplicate
