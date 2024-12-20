@@ -72,15 +72,16 @@ public static class ExtensionMethods
 			endpoints.MapPost(pattern, async context =>
 				{
 					var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
-					var webhook = JsonConvert.DeserializeObject<OttWebhook>(body);
-					if (webhook != null && attribute.Topics.Contains(webhook.Topic))
+					var webhookData = context.Request.ContentType is not "application/json" ? JsonConvert.DeserializeObject<string>(body) : body;
+					var webhook = JsonConvert.DeserializeObject<OttWebhook?>(webhookData!);
+					if (webhook is not null && attribute.Topics.Contains(webhook.Topic))
 					{
 						var instance = Activator.CreateInstance(method.DeclaringType!);
 						var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
-						if (instance != null)
+						if (instance is not null)
 						{
 							client.Logger.LogTrace("Handling incoming VHX webhook with topic '{topic}'", webhook.Topic);
-							client.Logger.LogTrace("Webhook date: {data}", body);
+							client.Logger.LogTrace("Webhook data: {data}", webhookData ?? "null");
 							await (Task)method.Invoke(instance, parameters)!;
 						}
 						else
