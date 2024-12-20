@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
@@ -9,7 +9,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<Title>Vimeo OTT Client</Title>
-		<Authors>AITSYS,Lulalaby,Aiko-IT-Systems</Authors>
+		<Authors>AITSYS,aiko,Aiko-IT-Systems</Authors>
 		<Description>A client library for Vimeo's OTT API</Description>
 		<Copyright>Copyright 2025 Aiko IT Systems</Copyright>
 		<RepositoryType>git</RepositoryType>
