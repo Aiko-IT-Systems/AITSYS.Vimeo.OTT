@@ -72,7 +72,8 @@ public static class ExtensionMethods
 			endpoints.MapPost(pattern, async context =>
 				{
 					var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
-					var webhookData = context.Request.ContentType is not "application/json" ? JsonConvert.DeserializeObject<string>(body) : body;
+					var needsReDeserialization = context.Request.ContentType != "application/json" && context.Request.ContentType != "application/json; charset=utf-8";
+					var webhookData = needsReDeserialization ? JsonConvert.DeserializeObject<string>(body) : body;
 					var webhook = JsonConvert.DeserializeObject<OttWebhook?>(webhookData!);
 					if (webhook is not null && attribute.Topics.Contains(webhook.Topic))
 					{
