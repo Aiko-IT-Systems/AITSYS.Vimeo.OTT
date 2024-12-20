@@ -46,10 +46,11 @@ public static class ExtensionMethods
 	///     provided authentication scheme.
 	/// </summary>
 	/// <param name="endpoints">The <see cref="IEndpointRouteBuilder" /> to add the route to.</param>
+	/// <param name="client">The <see cref="VimeoOttClient" /> to use for logging.</param>
 	/// <param name="pattern">The URL pattern of the webhook endpoint.</param>
 	/// <param name="authenticationScheme">The authentication scheme to apply to the endpoint.</param>
 	/// <returns>The <see cref="IEndpointRouteBuilder" /> with the mapped webhook endpoint.</returns>
-	public static IEndpointRouteBuilder MapVimeoOttWebhook(this IEndpointRouteBuilder endpoints, string pattern, string authenticationScheme)
+	public static IEndpointRouteBuilder MapVimeoOttWebhook(this IEndpointRouteBuilder endpoints, VimeoOttClient client, string pattern, string authenticationScheme)
 	{
 		var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -59,7 +60,7 @@ public static class ExtensionMethods
 			.Where(method => method.GetCustomAttributes(typeof(VimeoOttWebhookAttribute), false).Length > 0)
 			.ToArray();
 
-		Console.WriteLine($"Found {methods.Length} methods with VimeoOttWebhookAttribute.");
+		client.Logger.LogDebug("Found {count} methods with VimeoOttWebhookAttribute.", methods.Length);
 
 		foreach (var method in methods)
 		{
@@ -67,7 +68,7 @@ public static class ExtensionMethods
 			if (attribute == null)
 				continue;
 
-			Console.WriteLine($"Registering method {method.Name} for {string.Join(", ", attribute.Topics)}");
+			client.Logger.LogInformation("Registering method '{name}' for {topics}", method.Name, string.Join(", ", attribute.Topics));
 			endpoints.MapPost(pattern, async context =>
 				{
 					var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
@@ -77,10 +78,14 @@ public static class ExtensionMethods
 						var instance = Activator.CreateInstance(method.DeclaringType!);
 						var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
 						if (instance != null)
+						{
+							client.Logger.LogTrace("Handling incoming VHX webhook with topic '{topic}'", webhook.Topic);
+							client.Logger.LogTrace("Webhook date: {data}", body);
 							await (Task)method.Invoke(instance, parameters)!;
+						}
 						else
 						{
-							Console.WriteLine("Failed to create an instance of the method's declaring type.");
+							client.Logger.LogError("Failed to create an instance of the method's declaring type while handling incoming VHX webhook with topic '{topic}'", webhook.Topic);
 							context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 						}
 					}
