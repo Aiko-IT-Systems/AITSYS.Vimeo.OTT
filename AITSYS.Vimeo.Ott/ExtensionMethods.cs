@@ -76,7 +76,7 @@ public static class ExtensionMethods
 					var webhook = JsonConvert.DeserializeObject<OttWebhook?>(webhookData!);
 					if (webhook is not null && attribute.Topics.Contains(webhook.Topic))
 					{
-						var instance = context.RequestServices.GetService(method.DeclaringType!);
+						var instance = context.RequestServices.GetService(method.DeclaringType!) ?? Activator.CreateInstance(method.DeclaringType!);
 						var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
 						if (instance is not null)
 						{
