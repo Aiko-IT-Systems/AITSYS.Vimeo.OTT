@@ -75,7 +75,7 @@ public static class ExtensionMethods
 					return;
 				}
 
-				var topic = webhook.Topic.Replace("\n", string.Empty);
+				var topic = webhook.Topic.Replace("\n", string.Empty).Replace("\r", string.Empty);
 
 				var handled = false;
 
@@ -91,7 +91,6 @@ public static class ExtensionMethods
 					if (instance is not null)
 					{
 						client.Logger.LogDebug("Handling incoming VHX webhook with topic '{topic}'", topic);
-						client.Logger.LogTrace("Webhook data: {data}", webhookData ?? "null");
 						await (Task)method.Invoke(instance, parameters)!;
 						handled = true;
 						break;
