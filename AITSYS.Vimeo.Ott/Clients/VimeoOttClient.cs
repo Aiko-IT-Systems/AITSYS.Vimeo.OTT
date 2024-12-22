@@ -18,7 +18,7 @@ namespace AITSYS.Vimeo.Ott.Clients;
 /// <summary>
 ///     Represents a client for Vimeo OTT.
 /// </summary>
-public sealed class VimeoOttClient
+public sealed class VimeoOttClient : IDisposable
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="VimeoOttClient" /> class.
@@ -75,6 +75,11 @@ public sealed class VimeoOttClient
 	}
 
 	/// <summary>
+	///     Gets a value indicating whether the object has been disposed.
+	/// </summary>
+	private volatile bool _disposed;
+
+	/// <summary>
 	///     Gets the library version.
 	/// </summary>
 	public string LibraryVersion { get; }
@@ -107,7 +112,18 @@ public sealed class VimeoOttClient
 	/// <summary>
 	///     Gets the API client.
 	/// </summary>
-	internal VimeoOttApiClient ApiClient { get; }
+	internal VimeoOttApiClient ApiClient { get; set; }
+
+	/// <inheritdoc />
+	public void Dispose()
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		this._disposed = true;
+		this.Logger.LogInformation(LoggerEvents.Library, "VHX client disposing");
+		this.ApiClient.RestClient.Dispose();
+		this.ApiClient = null!;
+	}
 
 	/// <inheritdoc cref="VimeoOttApiClient.ExecuteRawRequestAsync" />
 	public async Task<string> ExecuteRawRequestAsync(string url, RestRequestMethod method, string? payload = null)
