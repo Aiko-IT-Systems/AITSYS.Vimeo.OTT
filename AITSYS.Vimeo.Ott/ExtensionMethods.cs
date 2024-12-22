@@ -62,43 +62,53 @@ public static class ExtensionMethods
 
 		client.Logger.LogDebug("Found {count} methods with VimeoOttWebhookAttribute.", methods.Length);
 
-		foreach (var method in methods)
-		{
-			var attribute = method.GetCustomAttribute<VimeoOttWebhookAttribute>();
-			if (attribute is null)
-				continue;
+		endpoints.MapPost(pattern, async context =>
+			{
+				var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+				var needsReDeserialization = context.Request.ContentType != "application/json" && context.Request.ContentType != "application/json; charset=utf-8";
+				var webhookData = needsReDeserialization ? JsonConvert.DeserializeObject<string>(body) : body;
+				var webhook = JsonConvert.DeserializeObject<OttWebhook?>(webhookData!);
 
-			client.Logger.LogInformation("Registering method '{name}' for {topics}", method.Name, string.Join(", ", attribute.Topics));
-			endpoints.MapPost(pattern, async context =>
+				if (webhook is null)
 				{
-					var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
-					var needsReDeserialization = context.Request.ContentType != "application/json" && context.Request.ContentType != "application/json; charset=utf-8";
-					var webhookData = needsReDeserialization ? JsonConvert.DeserializeObject<string>(body) : body;
-					var webhook = JsonConvert.DeserializeObject<OttWebhook?>(webhookData!);
-					if (webhook is not null && attribute.Topics.Contains(webhook.Topic))
+					context.Response.StatusCode = StatusCodes.Status400BadRequest;
+					return;
+				}
+
+				var topic = webhook.Topic.Replace("\n", string.Empty);
+
+				var handled = false;
+
+				foreach (var method in methods)
+				{
+					var attribute = method.GetCustomAttribute<VimeoOttWebhookAttribute>();
+					if (attribute is null || !attribute.Topics.Contains(topic))
+						continue;
+
+					var instance = context.RequestServices.GetService(method.DeclaringType!) ?? Activator.CreateInstance(method.DeclaringType!);
+					var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
+
+					if (instance is not null)
 					{
-						var instance = context.RequestServices.GetService(method.DeclaringType!) ?? Activator.CreateInstance(method.DeclaringType!);
-						var parameters = method.GetParameters().Select(p => p.ParameterType == typeof(OttWebhook) ? webhook : context.RequestServices.GetService(p.ParameterType)).ToArray();
-						if (instance is not null)
-						{
-							client.Logger.LogTrace("Handling incoming VHX webhook with topic '{topic}'", webhook.Topic);
-							client.Logger.LogTrace("Webhook data: {data}", webhookData ?? "null");
-							await (Task)method.Invoke(instance, parameters)!;
-						}
-						else
-						{
-							client.Logger.LogError("Failed to resolve an instance of the method's declaring type while handling incoming VHX webhook with topic '{topic}'", webhook.Topic);
-							context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-						}
+						client.Logger.LogDebug("Handling incoming VHX webhook with topic '{topic}'", topic);
+						client.Logger.LogTrace("Webhook data: {data}", webhookData ?? "null");
+						await (Task)method.Invoke(instance, parameters)!;
+						handled = true;
+						break;
 					}
-					else
-						context.Response.StatusCode = StatusCodes.Status400BadRequest;
-				})
-				.RequireAuthorization(new AuthorizeAttribute
-				{
-					AuthenticationSchemes = authenticationScheme
-				});
-		}
+
+					client.Logger.LogError("Failed to resolve an instance of the method's declaring type while handling incoming VHX webhook with topic '{topic}'", topic);
+					context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+					return;
+				}
+
+				if (!handled)
+					context.Response.StatusCode = StatusCodes.Status400BadRequest;
+			})
+			.RequireAuthorization(new AuthorizeAttribute
+			{
+				AuthenticationSchemes = authenticationScheme
+			});
 
 		return endpoints;
 	}
