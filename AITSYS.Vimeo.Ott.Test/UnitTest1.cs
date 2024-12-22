@@ -33,6 +33,13 @@ public sealed class Tests
 		this.CustomerVimeoClient = this.VimeoClient.GetClientForCustomer($"https://api.vhx.tv/customers/{this.UserId}");
 	}
 
+	[OneTimeTearDown]
+	public void Dispose()
+	{
+		this.CustomerVimeoClient.Dispose();
+		this.VimeoClient.Dispose();
+	}
+
 	[Test]
 	public void TestIntentionalExceptionThrow()
 	{
