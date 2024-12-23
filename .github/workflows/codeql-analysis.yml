@@ -40,8 +40,8 @@ jobs:
               with:
                   dotnet-version: 9.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott/AITSYS.Vimeo.Ott.csproj
+              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
             - name: Build
-              run: dotnet build -c Release -v minimal --no-restore --no-self-contained AITSYS.Vimeo.Ott/AITSYS.Vimeo.Ott.csproj
+              run: dotnet build -c Release -v minimal --no-restore --no-self-contained AITSYS.Vimeo.Ott.sln
             - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3

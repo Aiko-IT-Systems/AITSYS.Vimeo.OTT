@@ -6,7 +6,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<Title>Vimeo OTT Client</Title>
 		<Authors>AITSYS,aiko,Aiko-IT-Systems</Authors>
