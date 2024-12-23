@@ -123,11 +123,13 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		var paginator = JsonConvert.DeserializeObject<OttPagination<OttCustomersEmbeddedData>>(res.Response)!;
 		paginator.Client = this.Client;
-		foreach (var customer in paginator.Embedded.Customers)
-		{
-			customer.Client = this.Client;
-			customer.Embedded.LatestEvent.Client = this.Client;
-		}
+		if (paginator.Embedded is not null)
+			foreach (var customer in paginator.Embedded.Customers)
+			{
+				customer.Client = this.Client;
+				if (customer.Embedded?.LatestEvent is not null)
+					customer.Embedded.LatestEvent.Client = this.Client;
+			}
 
 		return paginator;
 	}
