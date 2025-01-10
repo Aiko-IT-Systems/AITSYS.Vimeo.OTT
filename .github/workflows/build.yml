@@ -61,7 +61,7 @@ jobs:
             - name: Publish library
               run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts AITSYS.Vimeo.Ott.sln
             - name: Upload artifacts
-              uses: actions/upload-artifact@v4.5.0
+              uses: actions/upload-artifact@v4.6.0
               with:
                   name: AITSYS.Vimeo.Ott
                   path: ./artifacts/
