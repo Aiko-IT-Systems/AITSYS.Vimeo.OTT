@@ -17,6 +17,7 @@ public class OttObject<TOttHalLinks, TOttEmbedded> : IOttObject<TOttHalLinks, TO
 	/// <summary>
 	///     Gets the client.
 	/// </summary>
+	[JsonIgnore]
 	public VimeoOttClient Client { get; internal set; }
 
 	/// <summary>
