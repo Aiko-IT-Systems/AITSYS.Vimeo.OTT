@@ -30,9 +30,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: Setup .NET
-              uses: actions/setup-dotnet@v4.3.0
+              uses: actions/setup-dotnet@v4
               with:
-                  dotnet-version: 9.x
+                  dotnet-version: |
+                      10.0.100-preview.1.25120.13
+                      9.x
             - name: Restore dependencies
               run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
             - name: Build library
@@ -51,9 +53,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: Setup .NET
-              uses: actions/setup-dotnet@v4.3.0
+              uses: actions/setup-dotnet@v4
               with:
-                  dotnet-version: 9.x
+                  dotnet-version: |
+                      10.0.100-preview.1.25120.13
+                      9.x
             - name: Restore Packages
               run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
             - name: Build library
