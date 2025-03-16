@@ -144,4 +144,8 @@ public sealed class VimeoOttClient : IDisposable
 	/// <inheritdoc cref="VimeoOttApiClient.RetrieveProductAsync" />
 	public async Task<OttProduct<OttProductEmbeddedData>?> RetrieveProductAsync(int productId)
 		=> await this.ApiClient.RetrieveProductAsync(productId);
+
+	/// <inheritdoc cref="VimeoOttApiClient.UpdateCustomerAsync" />
+	public async Task<OttCustomer<OttCustomerProductEmbeddedData>?> UpdateCustomerAsync(int customerId, string? name = null, string? password = null)
+		=> await this.ApiClient.UpdateCustomerAsync(customerId, name, password);
 }

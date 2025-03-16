@@ -163,6 +163,42 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 	}
 
 	/// <summary>
+	///     Updates an existing customer.
+	/// </summary>
+	/// <param name="customerId">The <c>id</c> of the customer being updated.</param>
+	/// <param name="name">The new name of the customer.</param>
+	/// <param name="password">The new password of the customer.</param>
+	/// <returns>The updated customer.</returns>
+	internal async Task<OttCustomer<OttCustomerProductEmbeddedData>?> UpdateCustomerAsync(int customerId, string? name = null, string? password = null)
+	{
+		if (name is null && password is null)
+			throw new ArgumentException("At least one parameter must be set", $"{nameof(name)}, {nameof(password)}");
+
+		var route = $"{Endpoints.CUSTOMERS}/:customer_id";
+		var bucket = this.RestClient.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			customer_id = customerId
+		}, out var path);
+
+		RestCustomerUpdatePayload payload = new()
+		{
+			Name = name,
+			Password = password
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(bucket, url, RestRequestMethod.PATCH, route, payload: JsonConvert.SerializeObject(payload, Formatting.Indented)).ConfigureAwait(false);
+		if (res.ResponseCode == HttpStatusCode.NotFound)
+			return null;
+
+		var obj = JsonConvert.DeserializeObject<OttCustomer<OttCustomerProductEmbeddedData>>(res.Response)!;
+		obj.Client = this.Client;
+		foreach (var product in obj.Embedded.Products)
+			product.Client = this.Client;
+		return obj;
+	}
+
+	/// <summary>
 	///     Retrieves events of an existing customers.
 	/// </summary>
 	/// <param name="customerId">The <c>id</c> of the customer events are retrieved for.</param>
