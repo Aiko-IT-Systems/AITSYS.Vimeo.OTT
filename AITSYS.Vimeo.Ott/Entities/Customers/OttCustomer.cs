@@ -21,7 +21,7 @@ public sealed class OttCustomer<TOttEmbedded> : OttIdObject<OttCustomerLinks, TO
 	///     The customer name.
 	/// </summary>
 	[JsonProperty("name")]
-	public string Name { get; internal set; }
+	public string? Name { get; internal set; }
 
 	/// <summary>
 	///     The customer email.
