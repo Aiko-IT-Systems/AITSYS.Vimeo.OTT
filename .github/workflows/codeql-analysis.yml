@@ -38,9 +38,7 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v5
               with:
-                  dotnet-version: |
-                      10.0.100-preview.1.25120.13
-                      9.x
+                  dotnet-version: 10.x
             - name: Restore dependencies
               run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott/AITSYS.Vimeo.Ott.csproj
             - name: Build

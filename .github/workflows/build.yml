@@ -32,15 +32,13 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v5
               with:
-                  dotnet-version: |
-                      10.0.100-preview.1.25120.13
-                      9.x
+                  dotnet-version: 10.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
+              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.slnx
             - name: Build library
-              run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.sln
+              run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.slnx
             - name: Test library
-              run: dotnet test -v minimal -c Release --no-restore --no-build AITSYS.Vimeo.Ott.sln
+              run: dotnet test -v minimal -c Release --no-restore --no-build AITSYS.Vimeo.Ott.slnx
               env:
                 VIMEO_TEST_TOKEN: ${{ secrets.VIMEO_TEST_TOKEN }}
                 VIMEO_TEST_USER: ${{ secrets.VIMEO_TEST_USER }}
@@ -55,15 +53,13 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v5
               with:
-                  dotnet-version: |
-                      10.0.100-preview.1.25120.13
-                      9.x
+                  dotnet-version: 10.x
             - name: Restore Packages
-              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.sln
+              run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.slnx
             - name: Build library
-              run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.sln
+              run: dotnet build -c Release -v minimal --no-restore AITSYS.Vimeo.Ott.slnx
             - name: Publish library
-              run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts AITSYS.Vimeo.Ott.sln
+              run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts AITSYS.Vimeo.Ott.slnx
             - name: Upload artifacts
               uses: actions/upload-artifact@v6.0.0
               with:
