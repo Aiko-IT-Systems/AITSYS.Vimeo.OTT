@@ -108,7 +108,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		this.CanNotAccessEndpointWithCustomerAuthedClient();
 		var route = $"{Endpoints.CUSTOMERS}";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var url = Utilities.GetApiUriFor(path).AddParameter(nameof(page), page.ToString()).AddParameter("per_page", perPage.ToString());
 		if (productId is not null)
 			url = url.AddParameter("product", $"{Utilities.GetApiBaseUri()}{Endpoints.PRODUCTS}/{productId}");
@@ -260,7 +260,7 @@ internal sealed class VimeoOttApiClient(VimeoOttClient client)
 		this.CanNotAccessEndpointWithCustomerAuthedClient();
 		var route = $"{Endpoints.PRODUCTS}";
 		var bucket = this.RestClient.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var url = Utilities.GetApiUriFor(path).AddParameter(nameof(page), page.ToString()).AddParameter("per_page", perPage.ToString());
 		if (query is not null)
 			url = url.AddParameter(nameof(query), query);
