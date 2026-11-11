@@ -32,7 +32,7 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v6
               with:
-                  dotnet-version: 10.x
+                  dotnet-version: 11.x
             - name: Restore dependencies
               run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.slnx
             - name: Build library
@@ -53,7 +53,7 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v6
               with:
-                  dotnet-version: 10.x
+                  dotnet-version: 11.x
             - name: Restore Packages
               run: dotnet restore --no-cache -f -v minimal AITSYS.Vimeo.Ott.slnx
             - name: Build library
